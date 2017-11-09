@@ -1,0 +1,17 @@
+<%
+@"
+PSTOPIC
+    about_$PLASTER_PARAM_ModuleName
+
+SHORT DESCRIPTION
+    $PLASTER_PARAM_ModuleDesc
+
+LONG DESCRIPTION
+    $PLASTER_PARAM_ModuleDesc
+
+DETAILED DESCRIPTION
+    $PLASTER_PARAM_ModuleDesc
+
+"@
+
+%>
