@@ -15,6 +15,7 @@
     <parameter name="ModuleDesc" type="text" prompt="Brief description on this module" />
     <parameter name="ModuleVersion" type="text" prompt="Version number" default='0.0.0.1' />
     <parameter name="ModuleAuthor" type="user-fullname" prompt="Author"/>
+    <parameter name="ModuleEmail" type="user-email" prompt="Email"/>
     <parameter name="FunctionFolders" type="multichoice" prompt="Please select folders to include" default='0,1,2'>
       <choice label="&amp;Public" help="Adds a public folder to module root" value="Public" />
       <choice label="P&amp;rivate" help="Adds a private folder to module root" value="Private" />
@@ -47,37 +48,37 @@
   </parameters>
   <content>
     <message>&#10;&#10;Scaffolding your PowerShell Module...&#10;&#10;&#10;</message>
-    <newModuleManifest destination='${PLASTER_PARAM_ModuleName}.psd1' moduleVersion='$PLASTER_PARAM_ModuleVersion' rootModule='${PLASTER_PARAM_ModuleName}.psm1' author='$PLASTER_PARAM_ModuleAuthor' description='$PLASTER_PARAM_ModuleDesc'/>
-    <file source='template.psm1' destination='${PLASTER_PARAM_ModuleName}.psm1'/>
+    <newModuleManifest destination='${PLASTER_PARAM_ModuleName}\${PLASTER_PARAM_ModuleName}.psd1' moduleVersion='$PLASTER_PARAM_ModuleVersion' rootModule='${PLASTER_PARAM_ModuleName}.psm1' author='$PLASTER_PARAM_ModuleAuthor' description='$PLASTER_PARAM_ModuleDesc'/>
+    <file source='template.psm1' destination='${PLASTER_PARAM_ModuleName}\${PLASTER_PARAM_ModuleName}.psm1'/>
     
     <message> Creating you folders for module: $PLASTER_PARAM_ModuleName </message>
-    <file condition='$PLASTER_PARAM_FunctionFolders -contains "Public"' destination='Public\' source='' />
-    <file condition='$PLASTER_PARAM_FunctionFolders -contains "Private"' destination='Private\' source='' />
-    <file condition='$PLASTER_PARAM_FunctionFolders -contains "Classes"' destination='Classes\' source='' />
-    <file condition='$PLASTER_PARAM_FunctionFolders -contains "lib"' destination='lib\' source='' />
-    <file condition='$PLASTER_PARAM_FunctionFolders -contains "bin"' destination='bin\' source='' />
-    <file condition='$PLASTER_PARAM_FunctionFolders -contains "Data"' destination='Data\' source='' />
+    <file condition='$PLASTER_PARAM_FunctionFolders -contains "Public"' destination='${PLASTER_PARAM_ModuleName}\Public\' source='' />
+    <file condition='$PLASTER_PARAM_FunctionFolders -contains "Private"' destination='${PLASTER_PARAM_ModuleName}\Private\' source='' />
+    <file condition='$PLASTER_PARAM_FunctionFolders -contains "Classes"' destination='${PLASTER_PARAM_ModuleName}\Classes\' source='' />
+    <file condition='$PLASTER_PARAM_FunctionFolders -contains "lib"' destination='${PLASTER_PARAM_ModuleName}\lib\' source='' />
+    <file condition='$PLASTER_PARAM_FunctionFolders -contains "bin"' destination='${PLASTER_PARAM_ModuleName}\bin\' source='' />
+    <file condition='$PLASTER_PARAM_FunctionFolders -contains "Data"' destination='${PLASTER_PARAM_ModuleName}\Data\' source='' />
     
     <message condition='$PLASTER_PARAM_Pester -eq "Yes"'>Creating a Tests folder </message>
     <file condition='$PLASTER_PARAM_Pester -eq "Yes"' destination='Tests\' source='' />
-    <file condition='$PLASTER_PARAM_Pester -eq "Yes"' destination='Tests\${PLASTER_PARAM_ModuleName}-basic.tests.ps1' source='basicTest.ps1' />
+    <templateFile condition='$PLASTER_PARAM_Pester -eq "Yes"' destination='Tests\${PLASTER_PARAM_ModuleName}-basic.tests.ps1' source='basicTest.ps1' />
     <templateFile condition='$PLASTER_PARAM_Pester -eq "Yes"' source='Module.T.ps1' destination='Tests\${PLASTER_PARAM_ModuleName}.tests.ps1' />
 
     <message condition='$PLASTER_PARAM_Appveyor -eq "Yes"'>Create appveyor files</message>    
-    <file condition='$PLASTER_PARAM_Appveyor -eq "Yes"' source='appveyor.yml' destination='appveyor.yml' />
+    <templateFile condition='$PLASTER_PARAM_Appveyor -eq "Yes"' source='appveyor.yml' destination='appveyor.yml' />
     <file condition='$PLASTER_PARAM_Appveyor -eq "Yes"' source='appveyor.pester.ps1' destination='appveyor.pester.ps1' />
 
     <message condition='$PLASTER_PARAM_Format -eq "Yes"'>Creating a Format file</message>    
-    <file condition='$PLASTER_PARAM_Format -eq "Yes"' source='format.ps1xml' destination='${PLASTER_PARAM_ModuleName}.format.ps1xml' />
+    <file condition='$PLASTER_PARAM_Format -eq "Yes"' source='format.ps1xml' destination='${PLASTER_PARAM_ModuleName}\${PLASTER_PARAM_ModuleName}.format.ps1xml' />
 
     <message condition='$PLASTER_PARAM_Help -eq "Yes"'>Creating a Help file</message>    
-    <file condition='$PLASTER_PARAM_Help -eq "Yes"' destination='en-US\' source='' />
-    <templateFile condition='$PLASTER_PARAM_Help -eq "Yes"' source='about_.help.txt' destination='en-US\about_${PLASTER_PARAM_ModuleName}.help.txt' />
+    <file condition='$PLASTER_PARAM_Help -eq "Yes"' destination='${PLASTER_PARAM_ModuleName}\en-US\' source='' />
+    <templateFile condition='$PLASTER_PARAM_Help -eq "Yes"' source='about_.help.txt' destination='${PLASTER_PARAM_ModuleName}\en-US\about_${PLASTER_PARAM_ModuleName}.help.txt' />
 
     <message condition="$PLASTER_PARAM_Editor -eq 'VSCode'">Creating a VSCode folder </message>
     <file condition="$PLASTER_PARAM_Editor -eq 'VSCode'" source='editor\VSCode\settings.json' destination='.vscode\settings.json' />
     <file condition="$PLASTER_PARAM_Editor -eq 'VSCode'" source='editor\VSCode\tasks.json' destination='.vscode\tasks.json' />
 
-    <templateFile source='PublishModule.ps1' destination='PublishModule.ps1' />
+    <templateFile source='build.ps1' destination='build.ps1' />
   </content>
 </plasterManifest>

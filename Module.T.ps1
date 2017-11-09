@@ -4,7 +4,7 @@ if($env:APPVEYOR_REPO_BRANCH -and $env:APPVEYOR_REPO_BRANCH -notlike "master") {
 }
 
 $ModuleManifestName = '<%=$PLASTER_PARAM_ModuleName%>.psd1'
-$ModuleManifestPath = "$PSScriptRoot\..\$ModuleManifestName"
+$ModuleManifestPath = "$PSScriptRoot\..\<%=$PLASTER_PARAM_ModuleName%>\$ModuleManifestName"
 
 Describe 'Module Manifest Tests' {
     It 'Passes Test-ModuleManifest' {

@@ -3,8 +3,8 @@ if($env:APPVEYOR_REPO_BRANCH -and $env:APPVEYOR_REPO_BRANCH -notlike "master") {
     $Verbose.add("Verbose",$True)
 }
 
-$moduleRoot = Resolve-Path "$PSScriptRoot\.."
-$moduleName = Split-Path $moduleRoot -Leaf
+$moduleRoot = Resolve-Path "$PSScriptRoot\..\<%=$PLASTER_PARAM_ModuleName%>"
+$moduleName = "<%=$PLASTER_PARAM_ModuleName%>"
 
 Describe "General project validation: $moduleName" {
 
