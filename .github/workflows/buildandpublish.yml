@@ -33,9 +33,19 @@ jobs:
     - name: Install dependencies
       shell: pwsh 
       run: |
+        $Timestamp = Get-date -uformat "%Y%m%d-%H%M%S"
+        $PSVersion = $PSVersionTable.PSVersion.Major
+        $TestFile = "TestResults_PS$PSVersion`_$TimeStamp.xml"
+        $Verbose = @{}
+        
+        #if($env:APPVEYOR_REPO_BRANCH -and $env:APPVEYOR_REPO_BRANCH -notlike "master")
+        #{
+        #    $Verbose.add("Verbose",$True)
+        #}              
+        
         Import-Module Pester -force
-        Invoke-Pester @Verbose -Path "$ProjectRoot\Tests" -OutputFormat NUnitXml -OutputFile "$ProjectRoot\$TestFile" -PassThru |
-            Export-Clixml -Path "$ProjectRoot\PesterResults_PS$PSVersion`_$Timestamp.xml"
+        Invoke-Pester @Verbose -Path ".\Tests" -OutputFormat NUnitXml -OutputFile ".\$TestFile" -PassThru |
+            Export-Clixml -Path ".\PesterResults_PS$PSVersion`_$Timestamp.xml"
         
     - name: NUnit Reporter
       uses: MirrorNG/nunit-reporter@v1.0.5
