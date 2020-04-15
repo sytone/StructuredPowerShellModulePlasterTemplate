@@ -22,16 +22,28 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo Hello, world!
-
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
+    - name: Install dependencies
+      shell: pwsh 
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        Install-PackageProvider -Name NuGet -Force | Out-Null
+        Install-Module -Name Pester -Force
+        Install-Module -Name posh-git -Force
+        Install-Module -Name platyPS -Force
+
+    - name: Install dependencies
+      shell: pwsh 
+      run: |
+        Import-Module Pester -force
+        Invoke-Pester @Verbose -Path "$ProjectRoot\Tests" -OutputFormat NUnitXml -OutputFile "$ProjectRoot\$TestFile" -PassThru |
+            Export-Clixml -Path "$ProjectRoot\PesterResults_PS$PSVersion`_$Timestamp.xml"
         
-    - name: Display the path
-      run: echo ${env:PATH}
-      shell: pwsh        
+    - name: NUnit Reporter
+      uses: MirrorNG/nunit-reporter@v1.0.5
+      with:
+        # github token
+        access-token: ${{ secrets.GITHUB_TOKEN }}
+        # glob to junit xml files
+        path: PesterResults*.xml
+        # max number of failed tests to include
+        numFailures: 30
+#  - ps: . .\build.ps1
