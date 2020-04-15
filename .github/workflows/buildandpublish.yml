@@ -25,10 +25,19 @@ jobs:
     - name: Install dependencies
       shell: pwsh 
       run: |
-        # Install-PackageProvider -Name PowerShellGet -Force | Out-Null
-        Install-Module -Name Pester -Force
-        Install-Module -Name posh-git -Force
-        Install-Module -Name platyPS -Force
+        # Install-PackageProvider -Name PowerShellGet -Scope CurrentUser -Force | Out-Null
+        Install-Module -Name Pester -Scope CurrentUser -Force
+        Install-Module -Name posh-git -Scope CurrentUser -Force
+        Install-Module -Name platyPS -Scope CurrentUser -Force
+        Install-Module -Name Plaster -Scope CurrentUser -Force
+
+    - name: Run Plaster
+      shell: pwsh 
+      run: |
+        mkdir ..\mycoolmodule
+        Invoke-Plaster -TemplatePath .\ -DestinationPath ..\mycoolmodule -ModuleName "TEST" -ModuleDesc "TESTDESC" -ModuleVersion "0.0.1" -ModuleAuthor "Fred Smith" -ModuleEmail "fred@smith.com" -FunctionFolders 'Public','Private','Classes' -Pester "Yes" -Appveyor 'No' -Format 'Yes' -Help 'Yes' -Editor 'VSCode'
+        Get-ChildItem ..\mycoolmodule
+
 
     - name: Run Pester
       shell: pwsh 
@@ -37,16 +46,16 @@ jobs:
         $PSVersion = $PSVersionTable.PSVersion.Major
         $TestFile = "TestResults_PS$PSVersion`_$TimeStamp.xml"
         $Verbose = @{}
-        
+        Push-Location ..\mycoolmodule
         #if($env:APPVEYOR_REPO_BRANCH -and $env:APPVEYOR_REPO_BRANCH -notlike "master")
         #{
         #    $Verbose.add("Verbose",$True)
         #}              
         
         Import-Module Pester -force
-        New-Item -ItemType Directory -Path ".\Tests" | Out-Null
-        Invoke-Pester @Verbose -Path ".\Tests" -OutputFormat NUnitXml -OutputFile ".\$TestFile" -PassThru |
+        Invoke-Pester @Verbose -Path ".\Tests" -OutputFormat NUnitXml -OutputFile "..\StructuredPowerShellModulePlasterTemplate\$TestFile" -PassThru |
             Export-Clixml -Path ".\PesterResults_PS$PSVersion`_$Timestamp.xml"
+        Pop-Location
         
     - name: NUnit Reporter
       uses: MirrorNG/nunit-reporter@v1.0.5
