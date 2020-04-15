@@ -30,7 +30,7 @@ jobs:
         Install-Module -Name posh-git -Force
         Install-Module -Name platyPS -Force
 
-    - name: Install dependencies
+    - name: Run Pester
       shell: pwsh 
       run: |
         $Timestamp = Get-date -uformat "%Y%m%d-%H%M%S"
