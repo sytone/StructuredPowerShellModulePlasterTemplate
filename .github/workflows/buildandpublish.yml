@@ -44,6 +44,7 @@ jobs:
         #}              
         
         Import-Module Pester -force
+        New-Item -ItemType Directory -Path ".\Tests" | Out-Null
         Invoke-Pester @Verbose -Path ".\Tests" -OutputFormat NUnitXml -OutputFile ".\$TestFile" -PassThru |
             Export-Clixml -Path ".\PesterResults_PS$PSVersion`_$Timestamp.xml"
         
