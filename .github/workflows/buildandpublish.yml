@@ -34,6 +34,7 @@ jobs:
     - name: Run Plaster
       shell: pwsh 
       run: |
+        dir env:\
         mkdir ..\mycoolmodule
         Invoke-Plaster -TemplatePath .\ -DestinationPath ..\mycoolmodule -ModuleName "TEST" -ModuleDesc "TESTDESC" -ModuleVersion "0.0.1" -ModuleAuthor "Fred Smith" -ModuleEmail "fred@smith.com" -FunctionFolders 'Public','Private','Classes' -Pester "Yes" -Appveyor 'No' -Format 'Yes' -Help 'Yes' -Editor 'VSCode'
         Get-ChildItem ..\mycoolmodule
